@@ -66,18 +66,23 @@ def gidyq_aa_female(request):
         return Response({
             'success': 0,
             'msg': "Incorrect user_res, user_res must be intergers separated by commas (no spaces, alphabets, etc.)",
-            'user_res': USER_RES,
+        })
+
+    try:
+        SCALE_RESULT = helpers.gidyq_aa_calculator(USER_RES_LIST)
+    except:
+        return Response({
+            'success': 0,
+            'msg': 'Unknown Exception Occurred!',
         })
 
     return Response({
-        # TODO calulate actual scores and result, remove this dummy data
         'success': 1,
-        'score': 7,
-        'result type': 'text',
-        'result': 'No Gender Dysphoria',
+        'score': SCALE_RESULT.get('score'),
+        'result type': SCALE_RESULT.get('result type'),
+        'result': SCALE_RESULT.get('result'),
         'refrences': [
             "Deogracias JJ, Johnson LL, Meyer-Bahlburg HF, Kessler SJ, Schober JM, Zucker KJ. The gender identity/gender dysphoria questionnaire for adolescents and adults. J Sex Res. 2007 Nov;44(4):370-9. doi: 10.1080/00224490701586730. PMID: 18321016.",
             "Singh D, Deogracias JJ, Johnson LL, Bradley SJ, Kibblewhite SJ, Owen-Anderson A, Peterson-Badali M, Meyer-Bahlburg HF, Zucker KJ. The gender identity/gender dysphoria questionnaire for adolescents and adults: further validity evidence. J Sex Res. 2010 Jan;47(1):49-58. doi: 10.1080/00224490902898728. PMID: 19396705.",
         ],
-        'res': USER_RES_LIST,
     })
