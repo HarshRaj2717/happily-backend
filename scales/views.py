@@ -71,6 +71,13 @@ def gidyq_aa_female(request):
             'skippable': True,
         })
 
+    if len(USER_RES) > 300:
+        # Impossibly huge USER_RES
+        return Response({
+            'success': 0,
+            'msg': 'Incorrect user_res, user_res can contain integers only in the inclusive range [0, no_of_choices]',
+        })
+
     try:
         USER_RES_LIST = [int(_) for _ in USER_RES.split(',')]
     except ValueError or TypeError:
@@ -78,13 +85,23 @@ def gidyq_aa_female(request):
             'success': 0,
             'msg': "Incorrect user_res, user_res must be intergers separated by commas (no spaces, alphabets, etc.)",
         })
-
-    try:
-        SCALE_RESULT = helpers.gidyq_aa_calculator(USER_RES_LIST)
-    except:
+    except Exception as error:
         return Response({
             'success': 0,
-            'msg': 'Unknown Exception Occurred!',
+            'msg': error,
+        })
+
+    try:
+        SCALE_RESULT = helpers.dass_y_calculator(USER_RES_LIST)
+    except KeyError:
+        return Response({
+            'success': 0,
+            'msg': 'Incorrect user_res, user_res can contain integers only in the inclusive range [0, no_of_choices]',
+        })
+    except Exception as error:
+        return Response({
+            'success': 0,
+            'msg': error,
         })
 
     return Response({
@@ -140,6 +157,13 @@ def gidyq_aa_male(request):
             'skippable': True,
         })
 
+    if len(USER_RES) > 300:
+        # Impossibly huge USER_RES
+        return Response({
+            'success': 0,
+            'msg': 'Incorrect user_res, user_res can contain integers only in the inclusive range [0, no_of_choices]',
+        })
+
     try:
         USER_RES_LIST = [int(_) for _ in USER_RES.split(',')]
     except ValueError or TypeError:
@@ -147,10 +171,10 @@ def gidyq_aa_male(request):
             'success': 0,
             'msg': "Incorrect user_res, user_res must be intergers separated by commas (no spaces, alphabets, etc.)",
         })
-    except:
+    except Exception as error:
         return Response({
             'success': 0,
-            'msg': 'Unknown Exception Occurred!',
+            'msg': error,
         })
 
     try:
@@ -160,10 +184,10 @@ def gidyq_aa_male(request):
             'success': 0,
             'msg': 'Incorrect user_res, user_res can contain integers only in the inclusive range [0, no_of_choices]',
         })
-    except:
+    except Exception as error:
         return Response({
             'success': 0,
-            'msg': 'Unknown Exception Occurred!',
+            'msg': error,
         })
 
     return Response({
@@ -185,37 +209,70 @@ def dass_y(request):
     if USER_RES == None or USER_RES.strip() == '':
         return Response({
             'success': 1,
-            'pretext':'We would like to find out how you have been feeling in THE PAST WEEK. There are some sentences below. Please select the statement which best shows how TRUE each sentence was of you during the past week. There are no right or wrong answers.',
+            'pretext': 'We would like to find out how you have been feeling in THE PAST WEEK. There are some sentences below. Please select the statement which best shows how TRUE each sentence was of you during the past week. There are no right or wrong answers.',
             'questions': [
+                "I got upset about little things",
+                "I felt dizzy, like I was about to faint",
+                "I did not enjoy anything",
+                "I had trouble breathing (e.g. fast breathing), even though I wasn't exercising and I was not sick.",
+                "I hated my life",
+                "I found myself over-reacting to situations",
+                "My hands felt shaky",
+                "I was stressing about lots of things",
+                "I felt terrified",
+                "There was nothing nice I could look forward to",
+                "I was easily irritated",
+                "I found it difficult to relax",
+                "I could not stop feeling sad",
+                "I got annoyed when people interrupted me",
+                "I felt like I was about to panic",
+                "I hated myself",
+                "I felt like I was no good",
+                "I was easily annoyed",
+                "I could feel my heart beating really fast, even though I hadn't done any hard exercise",
+                "I felt scared for no good reason",
+                "I felt that life was terrible",
             ],
             'choices': ["Not true", "A little true", "Fairly true", "Very true"],
-            'skippable': True,
+            'skippable': False,
+        })
+
+    if len(USER_RES) > 300:
+        # Impossibly huge USER_RES
+        return Response({
+            'success': 0,
+            'msg': 'Incorrect user_res, user_res can contain integers only in the inclusive range [0, no_of_choices]',
         })
 
     try:
-        USER_RES_LIST = [int(_) for _ in USER_RES.split(',')]
+        USER_RES_LIST = [(int(_) - 1) for _ in USER_RES.split(',')]
+        if -1 in USER_RES_LIST:
+            return Response({
+                'success': 0,
+                'msg': "This scale is not skippable, answer all questions",
+            })
     except ValueError or TypeError:
         return Response({
             'success': 0,
             'msg': "Incorrect user_res, user_res must be intergers separated by commas (no spaces, alphabets, etc.)",
         })
-    except:
+    except Exception as error:
         return Response({
             'success': 0,
-            'msg': 'Unknown Exception Occurred!',
+            'msg': error,
         })
 
     try:
-        SCALE_RESULT = helpers.gidyq_aa_calculator(USER_RES_LIST)
+        SCALE_RESULT = helpers.dass_y_calculator(USER_RES_LIST)
     except KeyError:
         return Response({
             'success': 0,
             'msg': 'Incorrect user_res, user_res can contain integers only in the inclusive range [0, no_of_choices]',
         })
-    except:
+    except Exception as error:
         return Response({
             'success': 0,
-            'msg': 'Unknown Exception Occurred!',
+            'msg': error,
         })
 
     return Response({
@@ -224,7 +281,6 @@ def dass_y(request):
         'result type': SCALE_RESULT.get('result type'),
         'result': SCALE_RESULT.get('result'),
         'refrences': [
-            "Deogracias JJ, Johnson LL, Meyer-Bahlburg HF, Kessler SJ, Schober JM, Zucker KJ. The gender identity/gender dysphoria questionnaire for adolescents and adults. J Sex Res. 2007 Nov;44(4):370-9. doi: 10.1080/00224490701586730. PMID: 18321016.",
-            "Singh D, Deogracias JJ, Johnson LL, Bradley SJ, Kibblewhite SJ, Owen-Anderson A, Peterson-Badali M, Meyer-Bahlburg HF, Zucker KJ. The gender identity/gender dysphoria questionnaire for adolescents and adults: further validity evidence. J Sex Res. 2010 Jan;47(1):49-58. doi: 10.1080/00224490902898728. PMID: 19396705.",
+            "Szabo M and Lovibond PF (2022) Development and Psychometric Properties of the DASS-Youth (DASS-Y): An Extension of the Depression Anxiety Stress Scales (DASS) to Adolescents and Children. Front. Psychol. 13:766890. doi: 10.3389/fpsyg.2022.766890",
         ],
     })
