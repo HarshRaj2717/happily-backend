@@ -9,10 +9,11 @@ from . import helpers
 @api_view(["GET"])
 def scales(request):
     return Response({
-        "All scale names": [
+        'success': 1,
+        'All scale names': [
             "Gender Dysphoria Scale (Female Assigned at Birth)",
         ],
-        "Gender Dysphoria Scale (Female Assigned at Birth)": {
+        'Gender Dysphoria Scale (Female Assigned at Birth)': {
             'name': "GIDYQ-AA",
             'link': "gidyq-aa-female",
         },
@@ -23,8 +24,9 @@ def scales(request):
 def gidyq_aa_female(request):
     USER_RES = request.GET.get('user_res')
 
-    if USER_RES == None:
+    if USER_RES == None or USER_RES.strip() == '':
         return Response({
+            'success': 1,
             'questions': [
                 "01. In the past 12 months, have you felt satisfied being a woman?",
                 "02. In the past 12 months, have you felt uncertain about your gender, that is, feeling somewhere in between a woman and a man?",
@@ -58,8 +60,18 @@ def gidyq_aa_female(request):
             'skippable': True,
         })
 
+    try:
+        USER_RES_LIST = [int(_) for _ in USER_RES.split(',')]
+    except ValueError or TypeError:
+        return Response({
+            'success': 0,
+            'msg': "Incorrect user_res, user_res must be intergers separated by commas (no spaces, alphabets, etc.)",
+            'user_res': USER_RES,
+        })
+
     return Response({
         # TODO calulate actual scores and result, remove this dummy data
+        'success': 1,
         'score': 7,
         'result type': 'text',
         'result': 'No Gender Dysphoria',
@@ -67,4 +79,5 @@ def gidyq_aa_female(request):
             "Deogracias JJ, Johnson LL, Meyer-Bahlburg HF, Kessler SJ, Schober JM, Zucker KJ. The gender identity/gender dysphoria questionnaire for adolescents and adults. J Sex Res. 2007 Nov;44(4):370-9. doi: 10.1080/00224490701586730. PMID: 18321016.",
             "Singh D, Deogracias JJ, Johnson LL, Bradley SJ, Kibblewhite SJ, Owen-Anderson A, Peterson-Badali M, Meyer-Bahlburg HF, Zucker KJ. The gender identity/gender dysphoria questionnaire for adolescents and adults: further validity evidence. J Sex Res. 2010 Jan;47(1):49-58. doi: 10.1080/00224490902898728. PMID: 19396705.",
         ],
+        'res': USER_RES_LIST,
     })
