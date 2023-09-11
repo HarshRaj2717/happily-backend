@@ -10,8 +10,10 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
+import json
 import os
 from pathlib import Path
+
 from dotenv import load_dotenv
 
 # Loading envionment variables
@@ -23,6 +25,11 @@ NEON_DB_USERNAME = os.getenv('neon_db_username')
 NEON_DB_PASSWORD = os.getenv('neon_db_password')
 NEON_DB_HOST = os.getenv('neon_db_host')
 NEON_DB_PORT = os.getenv('neon_db_port')
+
+# Loading cofig.json
+with open('config.json', 'r') as config_file_object:
+    CONFIG_JSON: dict = json.load(config_file_object)
+CLIENT_URL = CONFIG_JSON.get('CLIENT_URL')
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
