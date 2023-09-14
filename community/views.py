@@ -13,7 +13,16 @@ from .serializers import CommentsSerializer, PostsSerializer
 def get_posts(request):
     posts = Posts.objects.all()
     posts_serializer = PostsSerializer(posts, many=True)
-    print(posts_serializer)
+    return Response({
+        'success': 1,
+        'posts': posts_serializer.data,
+    })
+
+
+@api_view(["GET"])
+def get_specific_post(request, post_id):
+    posts = Posts.objects.get(id=post_id)
+    posts_serializer = PostsSerializer(posts, many=False)
     return Response({
         'success': 1,
         'posts': posts_serializer.data,

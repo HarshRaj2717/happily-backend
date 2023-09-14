@@ -5,6 +5,7 @@ from . import views
 # URL conf
 urlpatterns = [
     path('get-posts/', views.get_posts),
+    path('get-posts/<int:post_id>', views.get_specific_post),
     path('get-comments/<int:post_id>', views.get_comments),
     path('<str:user_key>/create-post/', views.create_post),
     path('<str:user_key>/delete-post/<int:post_id>', views.delete_post),
