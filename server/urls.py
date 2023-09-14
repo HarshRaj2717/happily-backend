@@ -21,4 +21,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path(f'{settings.FRONTEND_SECRET_KEY}/auth/', include('authenticator.urls')),
     path(f'{settings.FRONTEND_SECRET_KEY}/scales/', include('scales.urls')),
+    path(f'{settings.FRONTEND_SECRET_KEY}/community/', include('community.urls')),
 ]
