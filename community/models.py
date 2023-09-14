@@ -1,6 +1,7 @@
 from django.db import models
 
 from authenticator.models import Users
+
 # Create your models here.
 
 
@@ -9,10 +10,10 @@ class Posts(models.Model):
         'authenticator.Users', on_delete=models.CASCADE
     )
     created_on = models.DateTimeField(auto_now_add=True)
-    title = models.TextField()
-    content = models.TextField()
+    title = models.TextField(blank=False)
+    content = models.TextField(blank=False)
     total_votes = models.IntegerField(default=0)
-    # TODO comments
+    total_comments = models.IntegerField(default=0)
 
     def __str__(self) -> str:
         return str(self.id)  # type: ignore
@@ -41,7 +42,7 @@ class Posts(models.Model):
             'post_total_votes': self.total_votes,
         }
 
-    def downvote(self, user_key):
+    def downvote(self, user_key) -> dict[str, int]:
         """
         Downvotes the current Posts instance
         """
@@ -65,6 +66,29 @@ class Posts(models.Model):
             'post_total_votes': self.total_votes,
         }
 
+    def add_comment(self, user_key, content):
+        """
+        Creates a new comment
+        """
+        user = Users.objects.get(api_token=user_key)
+        comment = Comments.objects.create(
+            for_post=self,
+            created_by=user,
+            content=content,
+        )
+        comment.save()
+        self.total_comments += 1
+
+    def delete_comment(self, user_key, comment_id):
+        """
+        Deletes a comment
+        """
+        comment = Comments.objects.get(id=comment_id)
+        assert comment.for_post == self
+        assert Users.objects.get(api_token=user_key) == comment.created_by
+        comment.delete()
+        self.total_comments -= 1
+
 
 class Votes(models.Model):
     post = models.ForeignKey(
@@ -79,3 +103,21 @@ class Votes(models.Model):
 
     class Meta:
         unique_together = ['post', 'user']
+
+    def __str__(self) -> str:
+        return str(f"{self.post}_{self.user}")
+
+
+class Comments(models.Model):
+    for_post = models.ForeignKey(
+        'community.Posts', on_delete=models.CASCADE
+    )
+    created_by = models.ForeignKey(
+        'authenticator.Users', on_delete=models.CASCADE
+    )
+    created_on = models.DateTimeField(auto_now_add=True)
+    content = models.TextField(blank=False)
+
+    def __str__(self) -> str:
+        return str(
+            f"{self.id}=>{self.for_post}_{self.created_by}")  # type: ignore
