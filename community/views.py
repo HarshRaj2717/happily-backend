@@ -20,16 +20,6 @@ def get_posts(request):
 
 
 @api_view(["GET"])
-def get_specific_post(request, post_id):
-    posts = Posts.objects.get(id=post_id)
-    posts_serializer = PostsSerializer(posts, many=False)
-    return Response({
-        'success': 1,
-        'posts': posts_serializer.data,
-    })
-
-
-@api_view(["GET"])
 def get_comments(request, post_id):
     try:
         post = Posts.objects.get(id=post_id)
