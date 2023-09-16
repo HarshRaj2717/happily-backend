@@ -44,11 +44,11 @@ Backend APIs for the Happily project by Moon And Stars team.
 
 ### community
 
-- get all available posts - `base_link/frontend_api_key/get-posts/`
-- get comments of a specific post - `base_link/frontend_api_key/get-comments/post_id (eg: base_link/frontend_api_key/get-comments/1)`
-- create a post (user api key needed) - `base_link/frontend_api_key/user_api_key/create-post`
-- delete a post (user api key needed) - `base_link/frontend_api_key/user_api_key/delete-post/post_id (eg: base_link/frontend_api_key/user_api_key/delete-post/1)`
-- create a comment to a post (user api key needed) - `base_link/frontend_api_key/user_api_key/create-comment/post_id (eg: base_link/frontend_api_key/user_api_key/create-comment/1)`
-- create a comment to a post (user api key needed) - `base_link/frontend_api_key/user_api_key/delete-comment/post_id/comment_id (eg: base_link/frontend_api_key/user_api_key/delete-comment/1/1)`
-- upvote/like a post (user api key needed) - `base_link/frontend_api_key/user_api_key/upvote-post/post_id (eg: base_link/frontend_api_key/user_api_key/upvote-post/1)`
-- downvote/dislike a post (user api key needed) - `base_link/frontend_api_key/user_api_key/downvote-post/post_id (eg: base_link/frontend_api_key/user_api_key/downvote-post/1)`
+- get all available posts - `base_link/frontend_api_key/community/get-posts/`
+- get comments of a specific post - `base_link/frontend_api_key/community/get-comments/post_id` (eg: `base_link/frontend_api_key/community/get-comments/1`)
+- create a post (user api key needed) - `base_link/frontend_api_key/community/user_api_key/create-post`
+- delete a post (user api key needed) - `base_link/frontend_api_key/community/user_api_key/delete-post/post_id` (eg: `base_link/frontend_api_key/community/user_api_key/delete-post/1`)
+- create a comment to a post (user api key needed) - `base_link/frontend_api_key/community/user_api_key/create-comment/post_id` (eg: `base_link/frontend_api_key/community/user_api_key/create-comment/1`)
+- create a comment to a post (user api key needed) - `base_link/frontend_api_key/community/user_api_key/delete-comment/post_id/comment_id` (eg: `base_link/frontend_api_key/community/user_api_key/delete-comment/1/1`)
+- upvote/like a post (user api key needed) - `base_link/frontend_api_key/community/user_api_key/upvote-post/post_id` (eg: `base_link/frontend_api_key/community/user_api_key/upvote-post/1`)
+- downvote/dislike a post (user api key needed) - `base_link/frontend_api_key/community/user_api_key/downvote-post/post_id` (eg: `base_link/frontend_api_key/community/user_api_key/downvote-post/1`)
