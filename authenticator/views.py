@@ -227,3 +227,39 @@ def login_user(request):
             'message': 'User doesn\'t exists.',
             'redirect': '/register',
         })
+
+
+@api_view(['GET'])
+def verify_psychologist(request, user_key):
+    try:
+        user = Users.objects.get(api_token=user_key)
+        assert helpers.verify_professional()
+        user.verified_as = "psychologist"
+        user.save()
+        return Response({"success": 1})
+    except:
+        return Response({"success": 0})
+
+
+@api_view(['GET'])
+def verify_psychiatrist(request, user_key):
+    try:
+        user = Users.objects.get(api_token=user_key)
+        assert helpers.verify_professional()
+        user.verified_as = "psychiatrist"
+        user.save()
+        return Response({"success": 1})
+    except:
+        return Response({"success": 0})
+
+
+@api_view(['GET'])
+def verify_ngo(request, user_key):
+    try:
+        user = Users.objects.get(api_token=user_key)
+        assert helpers.verify_professional()
+        user.verified_as = "ngo"
+        user.save()
+        return Response({"success": 1})
+    except:
+        return Response({"success": 0})
