@@ -11,7 +11,7 @@ from .serializers import CommentsSerializer, PostsSerializer
 
 @api_view(["GET"])
 def get_posts(request):
-    posts = Posts.objects.all()
+    posts = Posts.objects.all().order_by('-created_on')
     posts_serializer = PostsSerializer(posts, many=True)
     return Response({
         'success': 1,
@@ -23,7 +23,7 @@ def get_posts(request):
 def get_comments(request, post_id):
     try:
         post = Posts.objects.get(id=post_id)
-        comments = Comments.objects.filter(for_post=post)
+        comments = Comments.objects.filter(for_post=post).order_by('-created_on')
     except:
         return Response({
             'success': 0
