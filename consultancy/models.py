@@ -7,7 +7,6 @@ from django.db.models import Q
 class Professionals(models.Model):
     email = models.OneToOneField(
         'authenticator.Users',
-        primary_key=True,
         on_delete=models.CASCADE,
         limit_choices_to=Q(verified_as="psychologist") | Q(
             verified_as="psychiatrist")
@@ -26,6 +25,9 @@ class Professionals(models.Model):
     available = models.BooleanField(default=False)
     charge = models.PositiveIntegerField(default=0)
     appointment_duration_hours = models.PositiveIntegerField(default=1)
+
+    def __str__(self) -> str:
+        return f"{self.email}"
 
 
 class Appointments(models.Model):
