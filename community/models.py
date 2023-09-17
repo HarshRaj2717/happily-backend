@@ -78,6 +78,7 @@ class Posts(models.Model):
         )
         comment.save()
         self.total_comments += 1
+        self.save()
 
     def delete_comment(self, user_key, comment_id):
         """
@@ -88,6 +89,7 @@ class Posts(models.Model):
         assert Users.objects.get(api_token=user_key) == comment.created_by
         comment.delete()
         self.total_comments -= 1
+        self.save()
 
 
 class Votes(models.Model):
