@@ -3,6 +3,8 @@ from random import randint
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
+from consultancy.models import Professionals
+
 from . import helpers
 from .models import Users
 
@@ -227,3 +229,61 @@ def login_user(request):
             'message': 'User doesn\'t exists.',
             'redirect': '/register',
         })
+
+
+@api_view(['POST'])
+def verify_psychologist(request, user_key):
+    data = request.data
+
+    try:
+        user = Users.objects.get(api_token=user_key)
+        assert helpers.verify_professional()
+        user.verified_as = "psychologist"
+        professional = Professionals.objects.create(
+            email=user,
+            description=data.get('description').strip(),
+            experience_in_years=data.get('experience_in_years'),
+            verified_as=user.verified_as,
+            charge=data.get('charge'),
+            appointment_duration_hours=data.get('appointment_duration_hours'),
+        )
+        professional.save()
+        user.save()
+        return Response({"success": 1})
+    except:
+        return Response({"success": 0})
+
+
+@api_view(['POST'])
+def verify_psychiatrist(request, user_key):
+    data = request.data
+
+    try:
+        user = Users.objects.get(api_token=user_key)
+        assert helpers.verify_professional()
+        user.verified_as = "psychiatrist"
+        professional = Professionals.objects.create(
+            email=user,
+            description=data.get('description').strip(),
+            experience_in_years=data.get('experience_in_years'),
+            verified_as=user.verified_as,
+            charge=data.get('charge'),
+            appointment_duration_hours=data.get('appointment_duration_hours'),
+        )
+        professional.save()
+        user.save()
+        return Response({"success": 1})
+    except:
+        return Response({"success": 0})
+
+
+@api_view(['POST'])
+def verify_ngo(request, user_key):
+    try:
+        user = Users.objects.get(api_token=user_key)
+        assert helpers.verify_professional()
+        user.verified_as = "ngo"
+        user.save()
+        return Response({"success": 1})
+    except:
+        return Response({"success": 0})

@@ -22,4 +22,5 @@ urlpatterns = [
     path(f'{settings.FRONTEND_SECRET_KEY}/auth/', include('authenticator.urls')),
     path(f'{settings.FRONTEND_SECRET_KEY}/scales/', include('scales.urls')),
     path(f'{settings.FRONTEND_SECRET_KEY}/community/', include('community.urls')),
+    path(f'{settings.FRONTEND_SECRET_KEY}/consultancy/', include('consultancy.urls')),
 ]

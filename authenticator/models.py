@@ -23,9 +23,14 @@ class Users(models.Model):
     active = models.BooleanField(default=True)
     # tier-0 == Free, 1 == Premium
     tier = models.PositiveSmallIntegerField(default=0)
+    verified_as = models.TextField(
+        choices=[("user", "User"), ("psychologist", "Psychologist"),
+                 ("psychiatrist", "Psychiatrist"), ("ngo", "NGO/Indepent Body")],
+        default="user",
+    )
 
     def __str__(self) -> str:
-        return self.email
+        return f"{self.email} - {self.verified_as}"
 
     def send_verification_code(self) -> bool:
         """
