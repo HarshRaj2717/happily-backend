@@ -22,7 +22,7 @@ class Professionals(models.Model):
                  ("psychiatrist", "Psychiatrist")],
     )
     no_of_ratings = models.PositiveIntegerField(default=0)
-    available = models.BooleanField(default=False)
+    available = models.BooleanField(default=True)
     charge = models.PositiveIntegerField(default=0)
     appointment_duration_hours = models.PositiveIntegerField(default=1)
 
@@ -37,6 +37,9 @@ class Appointments(models.Model):
     paid = models.BooleanField(default=False)
     fulfilled = models.BooleanField(default=False)
 
+    def __str__(self) -> str:
+        return str(self.id)  # type: ignore
+
 
 class Chats(models.Model):
     appointment_id = models.ForeignKey(
@@ -44,4 +47,7 @@ class Chats(models.Model):
     sender = models.TextField(
         choices=[("user", "user"), ("professional", "professional")], null=False, blank=False)
     content = models.TextField(null=False, blank=False)
-    is_active = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
+
+    def __str__(self) -> str:
+        return str(self.id)  # type: ignore
