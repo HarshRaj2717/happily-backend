@@ -23,10 +23,12 @@ def get_posts(request):
 def get_comments(request, post_id):
     try:
         post = Posts.objects.get(id=post_id)
-        comments = Comments.objects.filter(for_post=post).order_by('-created_on')
-    except:
+        comments = Comments.objects.filter(
+            for_post=post).order_by('-created_on')
+    except Exception as error:
         return Response({
-            'success': 0
+            'success': 0,
+            'msg': error
         })
     comment_serializer = CommentsSerializer(comments, many=True)
     return Response({
@@ -43,8 +45,11 @@ def add_comment(request, user_key, post_id):
         post = Posts.objects.get(id=post_id)
         post.add_comment(user_key, data['content'])
         return Response({"success": 1})
-    except:
-        return Response({"success": 0})
+    except Exception as error:
+        return Response({
+            'success': 0,
+            'msg': error
+        })
 
 
 @api_view(["POST"])
@@ -61,8 +66,11 @@ def create_post(request, user_key):
         )
         post.save()
         return Response({'success': 1})
-    except:
-        return Response({'success': 0})
+    except Exception as error:
+        return Response({
+            'success': 0,
+            'msg': error
+        })
 
 
 @api_view(["GET"])
@@ -70,9 +78,10 @@ def upvote_post(request, user_key, post_id):
     try:
         post = Posts.objects.get(id=post_id)
         vote_res = post.upvote(user_key)
-    except:
+    except Exception as error:
         return Response({
             'success': 0,
+            'msg': error
         })
 
     return Response({
@@ -87,9 +96,10 @@ def downvote_post(request, user_key, post_id):
     try:
         post = Posts.objects.get(id=post_id)
         vote_res = post.downvote(user_key)
-    except:
+    except Exception as error:
         return Response({
             'success': 0,
+            'msg': error
         })
 
     return Response({
@@ -106,8 +116,11 @@ def delete_post(request, user_key, post_id):
         assert Users.objects.get(api_token=user_key) == post.created_by
         post.delete()
         return Response({'success': 1})
-    except:
-        return Response({'success': 0})
+    except Exception as error:
+        return Response({
+            'success': 0,
+            'msg': error
+        })
 
 
 @api_view(["DELETE"])
@@ -116,5 +129,8 @@ def delete_comment(request, user_key, post_id, comment_id):
         post = Posts.objects.get(id=post_id)
         post.delete_comment(user_key, comment_id)
         return Response({'success': 1})
-    except:
-        return Response({'success': 0})
+    except Exception as error:
+        return Response({
+            'success': 0,
+            'msg': error
+        })
