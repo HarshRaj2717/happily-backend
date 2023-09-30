@@ -14,6 +14,7 @@ def scales(request):
             "Gender Dysphoria Scale (Female Assigned at Birth)",
             "Gender Dysphoria Scale (Male Assigned at Birth)",
             "Depression Anxiety Stress Scales - Youth Version",
+            "Overt Aggression scale (for adolescents)",
         ],
         'Gender Dysphoria Scale (Female Assigned at Birth)': {
             'name': "GIDYQ-AA",
@@ -27,6 +28,10 @@ def scales(request):
             'name': "DASS-Y",
             'link': "dass-y",
         },
+        'Overt Aggression scale (for adolescents)': {
+            'name': "Overt Aggresion",
+            'link': "overt-aggresion",
+        }
     })
 
 
@@ -88,7 +93,7 @@ def gidyq_aa_female(request):
     except Exception as error:
         return Response({
             'success': 0,
-            'msg': error,
+            'msg': str(error),
         })
 
     try:
@@ -101,7 +106,7 @@ def gidyq_aa_female(request):
     except Exception as error:
         return Response({
             'success': 0,
-            'msg': error,
+            'msg': str(error),
         })
 
     return Response({
@@ -174,7 +179,7 @@ def gidyq_aa_male(request):
     except Exception as error:
         return Response({
             'success': 0,
-            'msg': error,
+            'msg': str(error),
         })
 
     try:
@@ -187,7 +192,7 @@ def gidyq_aa_male(request):
     except Exception as error:
         return Response({
             'success': 0,
-            'msg': error,
+            'msg': str(error),
         })
 
     return Response({
@@ -259,7 +264,7 @@ def dass_y(request):
     except Exception as error:
         return Response({
             'success': 0,
-            'msg': error,
+            'msg': str(error),
         })
 
     try:
@@ -272,7 +277,7 @@ def dass_y(request):
     except Exception as error:
         return Response({
             'success': 0,
-            'msg': error,
+            'msg': str(error),
         })
 
     return Response({
@@ -282,5 +287,80 @@ def dass_y(request):
         'result': SCALE_RESULT.get('result'),
         'refrences': [
             "Szabo M and Lovibond PF (2022) Development and Psychometric Properties of the DASS-Youth (DASS-Y): An Extension of the Depression Anxiety Stress Scales (DASS) to Adolescents and Children. Front. Psychol. 13:766890. doi: 10.3389/fpsyg.2022.766890",
+        ],
+    })
+
+
+@api_view(["GET"])
+def overt_aggresion(request):
+    USER_RES = request.GET.get('user_res')
+
+    if USER_RES == None or USER_RES.strip() == '':
+        return Response({
+            'success': 1,
+            'pretext': 'Please answer the following questions thinking of what you actually did during the last 7 days.',
+            'questions': [
+                "I teased students to make them angry.",
+                "I got angry very easily with someone.",
+                "I fought back when someone hit me first.",
+                "I said things about other kids to make other students laugh.",
+                "I encouraged other students to fight.",
+                "I pushed or shoved other students.",
+                "I was angry most of the day.",
+                "I got into a physical fight because I was angry.",
+                "I slapped or kicked someone.",
+                "I called other students bad names.",
+                "I threatened to hurt or to hit someone.",
+            ],
+            'choices': ["Never", "1 time", "2 times", "3 times", "4 times", "5 times", "6 or more times"],
+            'skippable': False,
+        })
+
+    if len(USER_RES) > 300:
+        # Impossibly huge USER_RES
+        return Response({
+            'success': 0,
+            'msg': 'Incorrect user_res, user_res can contain integers only in the inclusive range [0, no_of_choices]',
+        })
+
+    try:
+        USER_RES_LIST = [(int(_) - 1) for _ in USER_RES.split(',')]
+        if -1 in USER_RES_LIST:
+            return Response({
+                'success': 0,
+                'msg': "This scale is not skippable, answer all questions",
+            })
+    except ValueError or TypeError:
+        return Response({
+            'success': 0,
+            'msg': "Incorrect user_res, user_res must be intergers separated by commas (no spaces, alphabets, etc.)",
+        })
+    except Exception as error:
+        return Response({
+            'success': 0,
+            'msg': str(error),
+        })
+
+    try:
+        SCALE_RESULT = helpers.overt_aggresion_calculator(USER_RES_LIST)
+    except KeyError:
+        return Response({
+            'success': 0,
+            'msg': 'Incorrect user_res, user_res can contain integers only in the inclusive range [0, no_of_choices]',
+        })
+    except Exception as error:
+        return Response({
+            'success': 0,
+            'msg': str(error),
+        })
+
+    return Response({
+        'success': 1,
+        'score': SCALE_RESULT.get('score'),
+        'result type': SCALE_RESULT.get('result type'),
+        'result': SCALE_RESULT.get('result'),
+        'refrences': [
+            "Orpinas, P., and Frankowski, R. (2001). The Aggression Scale: A Self-Report Measure of Aggressive Behavior for Young Adolescents. Journal of Early Adolescence, 21, 50-67.",
+            "Isen, J.D., McGue, M.K., and Iacono, W.G. (2015). Aggressive-antisocial boys develop into physically strong young men.",
         ],
     })

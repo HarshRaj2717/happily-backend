@@ -28,7 +28,7 @@ def get_comments(request, post_id):
     except Exception as error:
         return Response({
             'success': 0,
-            'msg': error
+            'msg': str(error),
         })
     comment_serializer = CommentsSerializer(comments, many=True)
     return Response({
@@ -48,7 +48,7 @@ def add_comment(request, user_key, post_id):
     except Exception as error:
         return Response({
             'success': 0,
-            'msg': error
+            'msg': str(error),
         })
 
 
@@ -69,7 +69,7 @@ def create_post(request, user_key):
     except Exception as error:
         return Response({
             'success': 0,
-            'msg': error
+            'msg': str(error),
         })
 
 
@@ -81,7 +81,7 @@ def upvote_post(request, user_key, post_id):
     except Exception as error:
         return Response({
             'success': 0,
-            'msg': error
+            'msg': str(error),
         })
 
     return Response({
@@ -99,7 +99,7 @@ def downvote_post(request, user_key, post_id):
     except Exception as error:
         return Response({
             'success': 0,
-            'msg': error
+            'msg': str(error),
         })
 
     return Response({
@@ -119,7 +119,7 @@ def delete_post(request, user_key, post_id):
     except Exception as error:
         return Response({
             'success': 0,
-            'msg': error
+            'msg': str(error),
         })
 
 
@@ -132,5 +132,5 @@ def delete_comment(request, user_key, post_id, comment_id):
     except Exception as error:
         return Response({
             'success': 0,
-            'msg': error
+            'msg': str(error),
         })

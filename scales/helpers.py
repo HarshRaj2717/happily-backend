@@ -135,3 +135,29 @@ def dass_y_calculator(user_res: list[int]) -> dict[str, str | float | dict[str, 
         scale_result["result"]["stress"][0] = "Extremely Severe"
 
     return scale_result
+
+
+def overt_aggresion_calculator(user_res: list[int]) -> dict[str, str | float]:
+    """
+    overt-aggresion calculator
+
+    Reference-1: https://www.psytoolkit.org/survey-library/aggression-adolescents.html
+    """
+    scale_result: dict[str, str | float] = {}
+
+    # Counting score
+    aggressionscore = 0
+    for i in user_res:
+        assert i <= 6 and i >= 0, "Invalid choice number in user_res"
+        aggressionscore += i
+
+    # generating scale_result
+    scale_result["score"] = aggressionscore
+    scale_result["result type"] = 'text'
+    scale_result["result"] = f'''\
+Your aggression score is {aggressionscore} on a range from 0 to 66.<br>
+In the original study developing the scale, the following averages were found:
+Boys: 19.3
+Girls: 13.2'''
+
+    return scale_result
